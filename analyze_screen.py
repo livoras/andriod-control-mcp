@@ -6,7 +6,6 @@
 from screen_utils import get_screen_info
 import json
 
-
 def analyze_current_screen():
     image_path, parsed_image_path, screen_info = get_screen_info()
     screen_info_json = json.dumps(screen_info, ensure_ascii=False)

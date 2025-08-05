@@ -1,0 +1,4 @@
+flask>=2.0.0
+uiautomator2>=2.16.0
+requests>=2.25.0
+omniparser
