@@ -54,7 +54,7 @@ def android_get_screen_info() -> Dict[str, Any]:
         return {
             "success": True,
             "data": {
-                "image_path": image_path,
+                # "image_path": image_path,
                 "parsed_image_path": parsed_path,
                 "screen_info": screen_info
             }
@@ -111,12 +111,12 @@ def android_click(x: int, y: int) -> Dict[str, Any]:
             "data": {
                 "clicked_position": {"x": x, "y": y},
                 "before_click": {
-                    "image_path": before_image_path,
+                    # "image_path": before_image_path,
                     "parsed_image_path": before_parsed_path,
                     "screen_info": before_screen_info
                 },
                 "after_click": {
-                    "image_path": after_image_path,
+                    # "image_path": after_image_path,
                     "parsed_image_path": after_parsed_path,
                     "screen_info": after_screen_info
                 },
@@ -193,7 +193,7 @@ def android_swipe(
             "success": True,
             "data": {
                 "after_swipe": {
-                    "image_path": after_image_path,
+                    # "image_path": after_image_path,
                     "parsed_image_path": after_parsed_path,
                     "screen_info": after_screen_info
                 }
@@ -236,7 +236,7 @@ def android_input_text(text: str, clear_before: bool = False) -> Dict[str, Any]:
             "data": {
                 "input_text": text,
                 "after_input": {
-                    "image_path": after_image_path,
+                    # "image_path": after_image_path,
                     "parsed_image_path": after_parsed_path,
                     "screen_info": after_screen_info
                 }
@@ -267,7 +267,7 @@ def android_back() -> Dict[str, Any]:
             "data": {
                 "action": "back",
                 "after_action": {
-                    "image_path": after_image_path,
+                    # "image_path": after_image_path,
                     "parsed_image_path": after_parsed_path,
                     "screen_info": after_screen_info
                 }
@@ -298,7 +298,7 @@ def android_home() -> Dict[str, Any]:
             "data": {
                 "action": "home",
                 "after_action": {
-                    "image_path": after_image_path,
+                    # "image_path": after_image_path,
                     "parsed_image_path": after_parsed_path,
                     "screen_info": after_screen_info
                 }
@@ -336,7 +336,7 @@ def android_long_click(x: int, y: int, duration: float = 1.0) -> Dict[str, Any]:
                 "long_clicked_position": {"x": x, "y": y},
                 "duration": duration,
                 "after_long_click": {
-                    "image_path": after_image_path,
+                    # "image_path": after_image_path,
                     "parsed_image_path": after_parsed_path,
                     "screen_info": after_screen_info
                 }
@@ -372,7 +372,7 @@ def android_double_click(x: int, y: int) -> Dict[str, Any]:
             "data": {
                 "double_clicked_position": {"x": x, "y": y},
                 "after_double_click": {
-                    "image_path": after_image_path,
+                    # "image_path": after_image_path,
                     "parsed_image_path": after_parsed_path,
                     "screen_info": after_screen_info
                 }

@@ -70,15 +70,36 @@ Or if installed locally:
 
 - Python 3.8+
 - Android device with USB debugging enabled
-- uiautomator2
-- OmniParser for screen analysis
+- Docker (for OmniParser API)
+- uiautomator2 (auto-installed)
 
 ## Setup
 
+### 1. Start OmniParser API Service (Required)
+
+The OmniParser API is required for UI element detection:
+
+```bash
+# Pull and run the OmniParser API container
+docker pull khhhshhh/omniparser-api:with-models
+docker run -d -p 8000:8000 --name omniparser khhhshhh/omniparser-api:with-models
+
+# Verify it's running
+curl http://localhost:8000/health
+```
+
+### 2. Setup Android Device
+
 1. Enable USB debugging on your Android device
 2. Connect device via USB
-3. Install and run the MCP server
-4. Use with your MCP-compatible AI assistant
+3. Verify connection: `adb devices`
+
+### 3. Run the MCP Server
+
+```bash
+# Run directly with uvx
+uvx --from git+https://github.com/livoras/andriod-control-mcp.git android-control-mcp
+```
 
 ## Development
 
