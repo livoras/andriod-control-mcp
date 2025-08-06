@@ -4,28 +4,12 @@ AI-powered Android automation through MCP (Model Context Protocol). This server 
 
 ## 🤖 Built for AI Assistants
 
-This MCP server bridges AI models with Android devices, allowing natural language commands to be translated into precise device interactions. By leveraging **OmniParser** - a state-of-the-art screen understanding model - AI assistants can:
+This MCP server bridges AI models with Android devices, allowing natural language commands to be translated into precise device interactions. By combining **OmniParser** for visual understanding and **UIAutomator2** for device control, AI assistants can:
 
 - **See** what's on the screen through intelligent element detection
 - **Understand** UI layouts and interactive components  
 - **Act** with precision using automatically calculated touch points
 - **Verify** actions through visual feedback
-
-## Core Technologies
-
-### OmniParser - AI Vision
-[OmniParser](https://github.com/microsoft/OmniParser) provides the visual understanding layer:
-- 📊 **Element Detection**: Identifies all UI components (buttons, text, icons)
-- 🎯 **Interaction Points**: Calculates precise click coordinates for each element
-- 🏷️ **Content Recognition**: Extracts text and labels from UI elements
-- 📐 **Layout Understanding**: Maps element relationships and screen structure
-
-### UIAutomator2 - Device Control
-[UIAutomator2](https://github.com/openatx/uiautomator2) provides the automation layer:
-- 🎮 **Direct Control**: Native Android automation without root access
-- ⚡ **Fast Execution**: High-performance device interaction
-- 🔧 **Robust API**: Reliable touch, swipe, and input operations
-- 📱 **Device Management**: App lifecycle and system control
 
 ## How It Works
 
@@ -148,6 +132,22 @@ curl http://localhost:8000/health
 # Run directly with uvx
 uvx --from git+https://github.com/livoras/andriod-control-mcp.git android-control-mcp
 ```
+
+## Core Technologies
+
+### OmniParser - AI Vision
+[OmniParser](https://github.com/microsoft/OmniParser) provides the visual understanding layer:
+- 📊 **Element Detection**: Identifies all UI components (buttons, text, icons)
+- 🎯 **Interaction Points**: Calculates precise click coordinates for each element
+- 🏷️ **Content Recognition**: Extracts text and labels from UI elements
+- 📐 **Layout Understanding**: Maps element relationships and screen structure
+
+### UIAutomator2 - Device Control
+[UIAutomator2](https://github.com/openatx/uiautomator2) provides the automation layer:
+- 🎮 **Direct Control**: Native Android automation without root access
+- ⚡ **Fast Execution**: High-performance device interaction
+- 🔧 **Robust API**: Reliable touch, swipe, and input operations
+- 📱 **Device Management**: App lifecycle and system control
 
 ## Development
 
