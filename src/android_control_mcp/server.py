@@ -206,12 +206,13 @@ def android_swipe(
         }
 
 @mcp.tool()
-def android_input_text(text: str, clear_before: bool = False) -> Dict[str, Any]:
+def android_input_text(text: str, clear_before: bool = False, slowly: bool = False) -> Dict[str, Any]:
     """在当前焦点输入文本
     
     Args:
         text: 要输入的文本
         clear_before: 输入前是否清空
+        slowly: 是否逐字输入（有打字动画效果）
     """
     try:
         d = get_device()
@@ -219,9 +220,17 @@ def android_input_text(text: str, clear_before: bool = False) -> Dict[str, Any]:
         if clear_before:
             d.clear_text()
         
-        # 使用快速输入法
         d.set_input_ime(True)
-        d.send_keys(text)
+        
+        if slowly:
+            # 逐字输入，有打字动画效果
+            for char in text:
+                d.send_keys(char)
+                time.sleep(0.03)  # 每个字符间隔0.03秒
+        else:
+            # 快速输入
+            d.send_keys(text)
+        
         d.set_input_ime(False)
         
         # 等待输入完成
@@ -235,6 +244,7 @@ def android_input_text(text: str, clear_before: bool = False) -> Dict[str, Any]:
             "success": True,
             "data": {
                 "input_text": text,
+                "input_mode": "slowly" if slowly else "fast",
                 "after_input": {
                     # "image_path": after_image_path,
                     "parsed_image_path": after_parsed_path,
