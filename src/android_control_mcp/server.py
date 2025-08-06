@@ -384,6 +384,197 @@ def android_double_click(x: int, y: int) -> Dict[str, Any]:
             "error": str(e)
         }
 
+@mcp.tool()
+def android_launch_app(package_name: str) -> Dict[str, Any]:
+    """直接通过包名启动Android应用
+    
+    Args:
+        package_name: 应用包名 (如 com.tencent.wework)
+    """
+    try:
+        d = get_device()
+        d.app_start(package_name)
+        
+        # 等待应用启动
+        time.sleep(2)
+        
+        # 获取启动后的屏幕信息
+        after_image_path, after_parsed_path, after_screen_info = get_screen_info()
+        after_screen_info = add_click_points(after_screen_info)
+        
+        # 获取当前应用信息
+        current_app = d.app_current()
+        
+        return {
+            "success": True,
+            "data": {
+                "launched_app": package_name,
+                "current_app": current_app,
+                "after_launch": {
+                    "parsed_image_path": after_parsed_path,
+                    "screen_info": after_screen_info
+                }
+            }
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+@mcp.tool()
+def android_list_apps(filter_type: str = "all") -> Dict[str, Any]:
+    """列出设备上的应用
+    
+    Args:
+        filter_type: 过滤类型 (all/running/user)
+    """
+    try:
+        d = get_device()
+        
+        if filter_type == "all":
+            apps = d.app_list()
+        elif filter_type == "running":
+            apps = d.app_list_running()
+        elif filter_type == "user":
+            # 过滤出用户应用（排除系统应用）
+            all_apps = d.app_list()
+            apps = [app for app in all_apps if not app.startswith("com.android.") 
+                   and not app.startswith("com.google.android.")]
+        else:
+            return {
+                "success": False,
+                "error": f"Invalid filter_type: {filter_type}"
+            }
+        
+        return {
+            "success": True,
+            "data": {
+                "filter_type": filter_type,
+                "total_count": len(apps),
+                "apps": apps
+            }
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+@mcp.tool()
+def android_search_app(keyword: str) -> Dict[str, Any]:
+    """按名称搜索应用
+    
+    Args:
+        keyword: 搜索关键词
+    """
+    try:
+        d = get_device()
+        all_apps = d.app_list()
+        
+        # 搜索包含关键词的应用（不区分大小写）
+        keyword_lower = keyword.lower()
+        matched_apps = []
+        
+        for app in all_apps:
+            # 检查包名是否包含关键词
+            if keyword_lower in app.lower():
+                matched_apps.append(app)
+            # 特殊匹配规则
+            elif keyword == "企业微信" and "wework" in app.lower():
+                matched_apps.append(app)
+            elif keyword == "微信" and app == "com.tencent.mm":
+                matched_apps.append(app)
+            elif keyword == "支付宝" and "alipay" in app.lower():
+                matched_apps.append(app)
+            elif keyword == "淘宝" and "taobao" in app.lower():
+                matched_apps.append(app)
+            elif keyword == "美团" and "meituan" in app.lower():
+                matched_apps.append(app)
+            elif keyword == "饿了么" and "eleme" in app.lower():
+                matched_apps.append(app)
+        
+        return {
+            "success": True,
+            "data": {
+                "keyword": keyword,
+                "matched_count": len(matched_apps),
+                "matched_apps": matched_apps
+            }
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+@mcp.tool()
+def android_app_info() -> Dict[str, Any]:
+    """获取当前运行应用信息"""
+    try:
+        d = get_device()
+        current_app = d.app_current()
+        
+        # 获取更多设备信息
+        device_info = d.info
+        
+        return {
+            "success": True,
+            "data": {
+                "current_app": current_app,
+                "device_info": {
+                    "brand": device_info.get("brand"),
+                    "model": device_info.get("model"),
+                    "sdk": device_info.get("sdk"),
+                    "android_version": device_info.get("version"),
+                    "display_size": f"{device_info.get('displayWidth')}x{device_info.get('displayHeight')}"
+                }
+            }
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+@mcp.tool()
+def android_force_stop_app(package_name: str) -> Dict[str, Any]:
+    """强制停止应用
+    
+    Args:
+        package_name: 应用包名
+    """
+    try:
+        d = get_device()
+        d.app_stop(package_name)
+        
+        # 等待应用停止
+        time.sleep(1)
+        
+        # 获取停止后的屏幕信息
+        after_image_path, after_parsed_path, after_screen_info = get_screen_info()
+        after_screen_info = add_click_points(after_screen_info)
+        
+        # 获取当前应用信息（确认是否已停止）
+        current_app = d.app_current()
+        
+        return {
+            "success": True,
+            "data": {
+                "stopped_app": package_name,
+                "current_app": current_app,
+                "after_stop": {
+                    "parsed_image_path": after_parsed_path,
+                    "screen_info": after_screen_info
+                }
+            }
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
 # 主程序入口
 if __name__ == "__main__":
     # 运行服务器
