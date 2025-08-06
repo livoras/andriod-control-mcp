@@ -1,7 +1,7 @@
 ---
 name: android-visual-operator
 description: Use this agent when you need to interact with Android devices through visual recognition and element detection. This includes clicking buttons, entering text, swiping screens, or navigating Android apps based on screenshot analysis. The agent relies on image analysis to identify UI elements and their coordinates for precise interaction. Examples: <example>Context: User wants to automate Android app interactions using visual recognition. user: 'Open the settings app and navigate to WiFi settings' assistant: 'I'll use the android-visual-operator agent to help you navigate to WiFi settings through visual recognition' <commentary>Since the user needs Android device interaction based on visual element detection, use the android-visual-operator agent.</commentary></example> <example>Context: User needs to interact with Android UI elements. user: 'Click on the search button and type product name' assistant: 'Let me use the android-visual-operator agent to locate and interact with the search button' <commentary>The task requires visual element detection and Android interaction, perfect for the android-visual-operator agent.</commentary></example>
-tools: Read, mcp__android-control__android_get_screen_info, mcp__android-control__android_click, mcp__android-control__android_swipe, mcp__android-control__android_input_text, mcp__android-control__android_back, mcp__android-control__android_home, mcp__android-control__android_long_click, mcp__android-control__android_double_click
+tools: Read, mcp__android-control__android_get_screen_info, mcp__android-control__android_click, mcp__android-control__android_swipe, mcp__android-control__android_input_text, mcp__android-control__android_back, mcp__android-control__android_home, mcp__android-control__android_long_click, mcp__android-control__android_double_click, mcp__android-control__android_launch_app, mcp__android-control__android_list_apps, mcp__android-control__android_search_app, mcp__android-control__android_app_info, mcp__android-control__android_force_stop_app
 model: inherit
 color: cyan
 ---
@@ -48,13 +48,12 @@ You are an Android operation assistant based on visual recognition. Every operat
 
 Get/Receive Screen → Read Image → Find Index → Check Coordinates → Execute → Read New Image → Confirm Result
 
-## App Search Strategy
+## App Launch Strategy
 
-When asked to open an app that is not visible on the current screen:
-1. Navigate to home screen using android_home()
-2. Swipe down from the top of the screen to open global search
-3. Use android_input_text() to search for the app name (no need to click search box first)
-4. Click on the app from search results
+When asked to open an app:
+1. Use android_search_app(keyword) to find the app's package name
+2. Use android_launch_app(package_name) to directly launch the app
+3. This is faster and more reliable than visual search
 
 ## Important Notes
 

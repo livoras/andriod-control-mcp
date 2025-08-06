@@ -57,6 +57,7 @@ Or if installed locally:
 
 ### Available Tools
 
+#### Screen & Navigation
 - `android_get_screen_info` - Get current screen information with element detection
 - `android_click(x, y)` - Click at specified coordinates
 - `android_swipe(direction)` - Swipe in direction (up/down/left/right)
@@ -65,6 +66,13 @@ Or if installed locally:
 - `android_home()` - Go to home screen
 - `android_long_click(x, y)` - Long press at coordinates
 - `android_double_click(x, y)` - Double click at coordinates
+
+#### App Management
+- `android_launch_app(package_name)` - Launch app directly by package name
+- `android_list_apps(filter_type)` - List installed apps (all/running/user)
+- `android_search_app(keyword)` - Search apps by keyword (supports Chinese names)
+- `android_app_info()` - Get current app and device information
+- `android_force_stop_app(package_name)` - Force stop an app
 
 ## Requirements
 
