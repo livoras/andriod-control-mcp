@@ -107,21 +107,42 @@ def get_screen_info() -> Tuple[str, str, Dict]:
     if result.get("labeled_image"):
         parser.save_labeled_image(result, parsed_image_path)
     
-    # 构建屏幕信息
+    # 构建屏幕信息（精简格式）
+    width = d.info["displayWidth"]
+    height = d.info["displayHeight"]
+    
+    # 只保留可交互元素，并转换格式
+    simplified_elements = []
+    for element in result["elements"]:
+        # 只保留可交互的元素
+        if element.get("interactivity", False):
+            bbox = element.get("bbox", [])
+            if len(bbox) == 4:
+                # 计算中心点和尺寸
+                center_x = int((bbox[0] + bbox[2]) / 2 * width)
+                center_y = int((bbox[1] + bbox[3]) / 2 * height)
+                elem_width = int((bbox[2] - bbox[0]) * width)
+                elem_height = int((bbox[3] - bbox[1]) * height)
+                
+                simplified_element = {
+                    "type": element.get("type"),
+                    "content": element.get("content"),
+                    "click_point": [center_x, center_y],
+                    "size": [elem_width, elem_height]
+                }
+                simplified_elements.append(simplified_element)
+    
     screen_info = {
         "device_info": {
-            "width": d.info["displayWidth"],
-            "height": d.info["displayHeight"],
-            "rotation": d.info.get("displayRotation", 0),
+            "size": [width, height],
             "screen_on": screen_on,
-            "screen_was_off": not screen_on,
             "is_locked": is_locked
         },
-        "current_app": current_app,
-        "elements": result["elements"],
-        "total_elements": result["total"],
-        "element_types": result["types"],
-        "timestamp": timestamp
+        "current_app": {
+            "package": current_app["package"],
+            "activity": current_app["activity"]
+        },
+        "elements": simplified_elements
     }
     
     return image_path, parsed_image_path, screen_info

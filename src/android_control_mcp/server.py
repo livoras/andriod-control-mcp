@@ -25,22 +25,11 @@ def get_device():
     return device
 
 def add_click_points(screen_info: Dict[str, Any]) -> Dict[str, Any]:
-    """为可交互元素添加点击坐标"""
-    width = screen_info['device_info']['width']
-    height = screen_info['device_info']['height']
-    
+    """为元素添加索引（新格式已包含click_point）"""
+    # 新格式已经在 screen_utils.py 中处理了 click_point 和 size
+    # 这里只需要添加索引
     for i, element in enumerate(screen_info.get('elements', [])):
-        if element.get('interactivity', False) and element.get('bbox'):
-            bbox = element['bbox']
-            # 计算中心点坐标
-            center_x = int((bbox[0] + bbox[2]) / 2 * width)
-            center_y = int((bbox[1] + bbox[3]) / 2 * height)
-            element['click_point'] = {
-                'x': center_x,
-                'y': center_y
-            }
-            # 添加元素索引便于引用
-            element['index'] = i
+        element['index'] = i
     
     return screen_info
 
@@ -80,18 +69,17 @@ def android_click(x: int, y: int) -> Dict[str, Any]:
         
         # 查找点击位置对应的元素
         clicked_element = None
-        screen_width = before_screen_info['device_info']['width']
-        screen_height = before_screen_info['device_info']['height']
         
-        # 转换为相对坐标
-        rel_x = x / screen_width
-        rel_y = y / screen_height
-        
+        # 新格式使用 click_point 和 size 判断
         for element in before_screen_info.get('elements', []):
-            bbox = element.get('bbox', [])
-            if len(bbox) == 4:
-                if (bbox[0] <= rel_x <= bbox[2] and 
-                    bbox[1] <= rel_y <= bbox[3]):
+            click_point = element.get('click_point', [])
+            size = element.get('size', [])
+            if len(click_point) == 2 and len(size) == 2:
+                cx, cy = click_point
+                w, h = size
+                # 判断点击位置是否在元素范围内
+                if (cx - w/2 <= x <= cx + w/2 and 
+                    cy - h/2 <= y <= cy + h/2):
                     clicked_element = element
                     break
         
