@@ -111,26 +111,33 @@ def get_screen_info() -> Tuple[str, str, Dict]:
     width = d.info["displayWidth"]
     height = d.info["displayHeight"]
     
-    # 只保留可交互元素，并转换格式
+    # 转换所有元素的格式，保留所有元素
     simplified_elements = []
     for element in result["elements"]:
-        # 只保留可交互的元素
-        if element.get("interactivity", False):
-            bbox = element.get("bbox", [])
-            if len(bbox) == 4:
-                # 计算中心点和尺寸
-                center_x = int((bbox[0] + bbox[2]) / 2 * width)
-                center_y = int((bbox[1] + bbox[3]) / 2 * height)
-                elem_width = int((bbox[2] - bbox[0]) * width)
-                elem_height = int((bbox[3] - bbox[1]) * height)
-                
-                simplified_element = {
-                    "type": element.get("type"),
-                    "content": element.get("content"),
-                    "click_point": [center_x, center_y],
-                    "size": [elem_width, elem_height]
-                }
-                simplified_elements.append(simplified_element)
+        bbox = element.get("bbox", [])
+        
+        # 初始化元素信息
+        simplified_element = {
+            "type": element.get("type"),
+            "content": element.get("content"),
+            "interactivity": element.get("interactivity", False)
+        }
+        
+        # 如果有 bbox，计算点击坐标和尺寸
+        if len(bbox) == 4:
+            center_x = int((bbox[0] + bbox[2]) / 2 * width)
+            center_y = int((bbox[1] + bbox[3]) / 2 * height)
+            elem_width = int((bbox[2] - bbox[0]) * width)
+            elem_height = int((bbox[3] - bbox[1]) * height)
+            
+            simplified_element["click_point"] = [center_x, center_y]
+            simplified_element["size"] = [elem_width, elem_height]
+        else:
+            # 没有 bbox 的元素也保留，但标记为无效坐标
+            simplified_element["click_point"] = None
+            simplified_element["size"] = None
+        
+        simplified_elements.append(simplified_element)
     
     screen_info = {
         "device_info": {
