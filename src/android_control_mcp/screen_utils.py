@@ -4,7 +4,6 @@
 """
 
 import uiautomator2 as u2
-from omniparser import OmniParser
 import os
 import tempfile
 from datetime import datetime
@@ -100,6 +99,7 @@ def get_screen_info() -> Tuple[str, str, Dict]:
     d.screenshot(image_path)
     
     # 使用 OmniParser 解析
+    from .omniparser import OmniParser
     parser = OmniParser()
     result = parser.parse(image_path, return_labeled=True)
     
