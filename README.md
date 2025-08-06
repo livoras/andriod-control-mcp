@@ -13,11 +13,11 @@ MCP (Model Context Protocol) server for Android device control with AI-powered s
 ## Installation
 
 ```bash
-# Install from PyPI
-pip install android-control-mcp
+# Run directly from GitHub (recommended)
+uvx --from git+https://github.com/livoras/andriod-control-mcp.git android-control-mcp
 
-# Or use uvx to run directly
-uvx android-control-mcp
+# Or install from GitHub
+pip install git+https://github.com/livoras/andriod-control-mcp.git
 ```
 
 ## Usage
@@ -30,8 +30,12 @@ Add to your MCP configuration:
 {
   "mcpServers": {
     "android-control": {
+      "type": "stdio",
       "command": "uvx",
-      "args": ["android-control-mcp"]
+      "args": [
+        "--from", "git+https://github.com/livoras/andriod-control-mcp.git",
+        "android-control-mcp"
+      ]
     }
   }
 }
@@ -43,6 +47,7 @@ Or if installed locally:
 {
   "mcpServers": {
     "android-control": {
+      "type": "stdio",
       "command": "python",
       "args": ["-m", "android_control_mcp"]
     }
