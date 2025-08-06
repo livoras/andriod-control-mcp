@@ -1,5 +1,0 @@
-mcp>=1.0.0
-uiautomator2>=2.16.0
-Pillow>=9.0.0
-requests>=2.25.0
-flask>=2.0.0

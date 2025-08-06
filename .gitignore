@@ -9,6 +9,13 @@ venv/
 ENV/
 .venv
 
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+*.whl
+
 # Screenshots and analysis results
 screenshot_*.png
 labeled_*.png
