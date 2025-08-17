@@ -12,7 +12,7 @@ import base64
 class OmniParser:
     """OmniParser API 客户端"""
     
-    def __init__(self, api_url: str = "http://localhost:8000"):
+    def __init__(self, api_url: str = "http://localhost:8001"):
         """
         初始化客户端
         
@@ -97,7 +97,7 @@ class OmniParser:
 
 
 # 便捷函数
-def parse_image(image_path: str, api_url: str = "http://localhost:8000") -> Dict:
+def parse_image(image_path: str, api_url: str = "http://localhost:8001") -> Dict:
     """快速解析图片"""
     parser = OmniParser(api_url)
     return parser.parse(image_path)
