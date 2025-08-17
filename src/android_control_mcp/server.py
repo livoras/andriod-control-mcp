@@ -78,8 +78,11 @@ def android_click(x: int, y: int) -> Dict[str, Any]:
                 cx, cy = click_point
                 w, h = size
                 # 判断点击位置是否在元素范围内
-                if (cx - w/2 <= x <= cx + w/2 and 
-                    cy - h/2 <= y <= cy + h/2):
+                # 使用整数运算避免浮点数问题
+                half_w = w // 2
+                half_h = h // 2
+                if (cx - half_w <= x <= cx + half_w and 
+                    cy - half_h <= y <= cy + half_h):
                     clicked_element = element
                     break
         
@@ -136,48 +139,33 @@ def android_swipe(
         end_y: 结束Y坐标
         duration: 滑动持续时间(秒)
     """
-    print(f"[SWIPE] 开始执行滑动操作...")
-    print(f"[SWIPE] 参数: direction={direction}, start_x={start_x}, start_y={start_y}, end_x={end_x}, end_y={end_y}, duration={duration}")
-    
     try:
-        print(f"[SWIPE] 步骤1: 获取设备连接...")
         d = get_device()
-        print(f"[SWIPE] 设备连接成功")
-        
-        print(f"[SWIPE] 步骤2: 获取屏幕尺寸...")
         screen_width = d.info['displayWidth']
         screen_height = d.info['displayHeight']
-        print(f"[SWIPE] 屏幕尺寸: {screen_width}x{screen_height}")
-        
-        print(f"[SWIPE] 步骤3: 执行滑动...")
         if direction:
             # 方向滑动
             if direction == 'up':
                 start_y_calc = int(screen_height * 0.7)
                 end_y_calc = int(screen_height * 0.3)
-                print(f"[SWIPE] 向上滑动: ({screen_width // 2}, {start_y_calc}) -> ({screen_width // 2}, {end_y_calc})")
                 d.swipe(screen_width // 2, start_y_calc,
                        screen_width // 2, end_y_calc, duration)
             elif direction == 'down':
                 start_y_calc = int(screen_height * 0.3)
                 end_y_calc = int(screen_height * 0.7)
-                print(f"[SWIPE] 向下滑动: ({screen_width // 2}, {start_y_calc}) -> ({screen_width // 2}, {end_y_calc})")
                 d.swipe(screen_width // 2, start_y_calc,
                        screen_width // 2, end_y_calc, duration)
             elif direction == 'left':
                 start_x_calc = int(screen_width * 0.7)
                 end_x_calc = int(screen_width * 0.3)
-                print(f"[SWIPE] 向左滑动: ({start_x_calc}, {screen_height // 2}) -> ({end_x_calc}, {screen_height // 2})")
                 d.swipe(start_x_calc, screen_height // 2,
                        end_x_calc, screen_height // 2, duration)
             elif direction == 'right':
                 start_x_calc = int(screen_width * 0.3)
                 end_x_calc = int(screen_width * 0.7)
-                print(f"[SWIPE] 向右滑动: ({start_x_calc}, {screen_height // 2}) -> ({end_x_calc}, {screen_height // 2})")
                 d.swipe(start_x_calc, screen_height // 2,
                        end_x_calc, screen_height // 2, duration)
             else:
-                print(f"[SWIPE] 错误: 无效的方向 {direction}")
                 return {
                     "success": False,
                     "error": f"Invalid direction: {direction}"
@@ -185,32 +173,19 @@ def android_swipe(
         elif all([start_x is not None, start_y is not None, 
                   end_x is not None, end_y is not None]):
             # 坐标滑动
-            print(f"[SWIPE] 坐标滑动: ({start_x}, {start_y}) -> ({end_x}, {end_y})")
             d.swipe(start_x, start_y, end_x, end_y, duration)
         else:
-            print(f"[SWIPE] 错误: 参数不完整")
             return {
                 "success": False,
                 "error": "Either direction or all coordinates must be provided"
             }
         
-        print(f"[SWIPE] 滑动执行完成")
-        
         # 等待UI更新
-        print(f"[SWIPE] 步骤4: 等待UI更新 (1秒)...")
         time.sleep(1)
-        print(f"[SWIPE] 等待完成")
         
         # 获取滑动后的屏幕信息
-        print(f"[SWIPE] 步骤5: 获取滑动后的屏幕信息...")
         after_image_path, after_parsed_path, after_screen_info = get_screen_info()
-        print(f"[SWIPE] 屏幕信息获取完成，图片路径: {after_parsed_path}")
-        
-        print(f"[SWIPE] 步骤6: 添加点击点信息...")
         after_screen_info = add_click_points(after_screen_info)
-        print(f"[SWIPE] 处理完成，检测到 {len(after_screen_info.get('elements', []))} 个元素")
-        
-        print(f"[SWIPE] 滑动操作全部完成，返回成功结果")
         return {
             "success": True,
             "data": {
@@ -222,9 +197,6 @@ def android_swipe(
             }
         }
     except Exception as e:
-        print(f"[SWIPE] 发生异常: {str(e)}")
-        import traceback
-        print(f"[SWIPE] 异常堆栈:\n{traceback.format_exc()}")
         return {
             "success": False,
             "error": str(e)
