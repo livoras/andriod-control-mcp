@@ -114,10 +114,10 @@ OmniParser is the AI vision system that enables understanding of Android screens
 ```bash
 # Pull and run the OmniParser API container
 docker pull khhhshhh/omniparser-api:with-models
-docker run -d -p 8001:8000 --name omniparser khhhshhh/omniparser-api:with-models
+docker run -d -p 8000:8000 --name omniparser khhhshhh/omniparser-api:with-models
 
 # Verify it's running
-curl http://localhost:8001/health
+curl http://localhost:8000/health
 ```
 
 ### 2. Setup Android Device
